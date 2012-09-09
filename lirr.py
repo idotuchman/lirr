@@ -55,9 +55,9 @@ def getDepartures(url, fromStation, toStation):
             if (today - trainDateTime) > timedelta(hours=12):      #check if listed time is for tomorrow, if so add one day to datetime object
                 trainDateTime = trainDateTime + timedelta(days = 1)
             
-#TODO need to check for delays and skip entry if departure + delay is < -6 min from now (i.e., trains has already left, no need to display departure)
-            
-            departures.append({'dateTime':trainDateTime, 'time':trainParams[1].string, 'destination': toStation[1], 'peak': trainParams[11].string})
+#TODO need to check for departure delays
+            if (today - trainDateTime) < timedelta(minutes = 6):      #make sure train has not already left station (i.e., departure occured more than 6 minutes ago)
+                departures.append({'dateTime':trainDateTime, 'time':trainParams[1].string, 'destination': toStation[1], 'peak': trainParams[11].string})
             
         # If departures is empty there was probably some parsing or network error    
         if (len(departures)==0): raise Exception, 'Network error (' + toStation[1] + ')'
